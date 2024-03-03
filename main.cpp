@@ -3,8 +3,13 @@
 void drawBoard(char *spaces);
 void playerMove(char *spaces, char playerCharacter);
 void computerMove(char *spaces, char computerCharacter);
+
+bool checkRows(char *spaces, char playerCharacter);
+bool checkColumns(char *spaces, char playerCharacter);
+bool checkDiagonals(char *spaces, char playerCharacter);
+
 bool checkForWinner(char *spaces, char playerCharacter, char computerCharacter);
-bool checkTie(char *spaces);
+bool checkForTie(char *spaces);
 
 int main()
 {
@@ -22,8 +27,30 @@ int main()
         playerMove(spaces, playerCharacter);
         drawBoard(spaces);
 
+        if (checkForWinner(spaces, playerCharacter, computerCharacter))
+        {
+            gameActive = false;
+            break;
+        }
+        else if (checkForTie(spaces))
+        {
+            gameActive = false;
+            break;
+        }
+
         computerMove(spaces, computerCharacter);
         drawBoard(spaces);
+
+        if (checkForWinner(spaces, playerCharacter, computerCharacter))
+        {
+            gameActive = false;
+            break;
+        }
+        else if (checkForTie(spaces))
+        {
+            gameActive = false;
+            break;
+        }
     }
 
     return 0;
@@ -88,11 +115,69 @@ void computerMove(char *spaces, char computeCharacter)
         }
     }
 }
+
+bool checkRows(char *spaces, char playerCharacter)
+{
+    for (int i = 0; i < 9; i += 3)
+    {
+        if ((spaces[i] != '-') && (spaces[i] == spaces[i + 1]) && (spaces[i + 1] == spaces[i + 2]))
+        {
+            return spaces[i] == playerCharacter;
+        }
+    }
+    return false;
+}
+
+bool checkColumns(char *spaces, char playerCharacter)
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        if ((spaces[i] != '-') && (spaces[i] == spaces[i + 3]) && (spaces[i + 3] == spaces[i + 6]))
+        {
+            return spaces[i] == playerCharacter;
+        }
+    }
+    return false;
+}
+
+bool checkDiagonals(char *spaces, char playerCharacter)
+{
+    if ((spaces[0] != '-') && (spaces[0] == spaces[4]) && (spaces[4] == spaces[8]))
+    {
+        return spaces[0] == playerCharacter;
+    }
+    else if ((spaces[2] != '-') && (spaces[2] == spaces[4]) && (spaces[4] == spaces[6]))
+    {
+        return spaces[2] == playerCharacter;
+    }
+    return false;
+}
+
 bool checkForWinner(char *spaces, char playerCharacter, char computerCharacter)
 {
-    return 0;
+    if (checkRows(spaces, playerCharacter) || checkColumns(spaces, playerCharacter) || checkDiagonals(spaces, playerCharacter))
+    {
+        std::cout << "Player Wins!\n";
+        return true;
+    }
+    else if (checkRows(spaces, computerCharacter) || checkColumns(spaces, computerCharacter) || checkDiagonals(spaces, computerCharacter))
+    {
+        std::cout << "Computer Wins!\n";
+        return true;
+    }
+    return false;
 }
-bool checkTie(char *spaces)
+
+bool checkForTie(char *spaces)
 {
-    return 0;
+    for (int i = 0; i < 9; ++i)
+    {
+        if (spaces[i] == '-')
+        {
+            return false;
+        }
+    }
+
+    std::cout << "It's a tie!\n";
+    return true;
 }
