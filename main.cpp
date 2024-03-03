@@ -21,6 +21,7 @@ int main()
     {
         playerMove(spaces, playerCharacter);
         drawBoard(spaces);
+
         computerMove(spaces, computerCharacter);
         drawBoard(spaces);
     }
@@ -72,8 +73,20 @@ void playerMove(char *spaces, char playerCharacter)
     } while (true);
 }
 
-void computerMove(char *spaces, char computeCharacterr)
+void computerMove(char *spaces, char computeCharacter)
 {
+    int number;
+    srand(time(NULL));
+
+    while (true)
+    {
+        number = rand() % 9;
+        if (spaces[number] == '-')
+        {
+            spaces[number] = computeCharacter;
+            break;
+        }
+    }
 }
 bool checkForWinner(char *spaces, char playerCharacter, char computerCharacter)
 {
